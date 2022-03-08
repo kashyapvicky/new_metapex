@@ -14,7 +14,10 @@ app.post('/TransferToken', async (request, response) => {
      const address = request.body.address;
      const privateKeys = request.body.privateKeys;
      const receiverAddress = request.body.receiverAddress;
-     const amt   = request.body.amt;
+     const amt_ether   = request.body.amt;
+     const amt = Web3.utils.toWei(amt_ether, 'ether');
+     console.log('amt',amt,typeof(amt));
+
 
      // if(address || privateKeys || receiverAddress ||  amt ){
      //      console.log("tetting");
@@ -22,7 +25,7 @@ app.post('/TransferToken', async (request, response) => {
      //      console.log(data);
      //      return  data;
      // }
-     console.log('privateKeys',privateKeys,typeof(privateKeys));
+    // console.log('privateKeys',privateKeys,typeof(privateKeys));
 
      const provider = new HDWalletProvider(privateKeys, "https://bsc-dataseed.binance.org/");
      // provider = new HDWalletProvider(privateKeys, "https://bsc-dataseed.binance.org/");
@@ -31,18 +34,27 @@ app.post('/TransferToken', async (request, response) => {
      ABI_CONTRACT_ADDRESS = "0xDEE28Cd60BACEdFCFF2eD28095ec210646E92474";
      const TokenContract = new web3.eth.Contract(ABI_TOKEN, ABI_CONTRACT_ADDRESS);
 
-     await TokenContract.methods.transfer(receiverAddress, amt).send({ "from": address }, (err, res) => {
-          if (err) {
-               data = {"code": "400", "msg":err}
-               return  response.send(data);
-          return  data;
-          }
-          data = {"code": "200", "msg":res}
-          console.log(data);
-          return  response.send(data);
-          // console.log("Hash transaction: " + res);
-          // response.send("Hash transaction: " + res);
-     });
+     try{
+
+   
+               await TokenContract.methods.transfer(receiverAddress, amt).send({ "from": address }, (err, res) => {
+                    if (err) {
+                         data = {"code": "400", "message":err}
+                         return  response.send(data);
+                    return  data;
+                    }
+                    data = {"code": "200", "message":res}
+                    console.log(data);
+                    return  response.send(data);
+                    // console.log("Hash transaction: " + res);
+                    // response.send("Hash transaction: " + res);
+               });
+     }
+     catch(err)
+     {
+          console.log(err);
+          return err;
+     }
 });
 app.listen(port,'0.0.0.0', () => {
      
