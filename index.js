@@ -56,7 +56,7 @@ app.post('/TransferToken', async (request, response) => {
           return err;
      }
 });
-app.listen(port,'0.0.0.0', () => {
+app.listen(port, () => {
      
      console.log(`app listening on port ${port}`);
 });
