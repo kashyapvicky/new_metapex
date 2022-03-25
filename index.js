@@ -57,7 +57,7 @@ app.post('/TransferToken', async (request, response) => {
      }
 });
 
-//generate wallet
+//generate wallet get
 web3 = new Web3(new Web3.providers.HttpProvider('https://data-seed-prebsc-1-s1.binance.org:8545/'));
 app.get('/createWallet', (req, res) => {
      var generated_wallet = web3.eth.accounts.create();
